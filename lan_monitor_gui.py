@@ -202,16 +202,46 @@ class LanMonitorApp:
 
         # UI: treeview
         cols = ("ip", "mac", "hostname", "last_seen")
-        self.tree = ttk.Treeview(root, columns=cols, show="headings", height=18)
+        # nuevo codigo para la tabla - agregue scroll
+                # === CONTENEDOR PARA SCROLL ===
+        table_frame = tk.Frame(self.root)
+        table_frame.pack(fill="both", expand=True, padx=8, pady=8)
+
+        # Scroll vertical
+        scroll_y = tk.Scrollbar(table_frame, orient="vertical")
+        scroll_y.pack(side="right", fill="y")
+
+        # Scroll horizontal
+        scroll_x = tk.Scrollbar(table_frame, orient="horizontal")
+        scroll_x.pack(side="bottom", fill="x")
+
+        # Tabla Treeview con scroll
+        self.tree = ttk.Treeview(
+            table_frame,
+            columns=("ip", "hostname", "mac", "last_seen"),
+            show="headings",
+            yscrollcommand=scroll_y.set,
+            xscrollcommand=scroll_x.set
+        )
+
+        # Conectar scrollbars
+        scroll_y.config(command=self.tree.yview)
+        scroll_x.config(command=self.tree.xview)
+
+        # Encabezados
         self.tree.heading("ip", text="IP")
-        self.tree.heading("mac", text="MAC")
         self.tree.heading("hostname", text="Hostname")
+        self.tree.heading("mac", text="MAC")
         self.tree.heading("last_seen", text="Último visto (UTC)")
-        self.tree.column("ip", width=120)
-        self.tree.column("mac", width=150)
+
+        # Ancho de columnas
+        self.tree.column("ip", width=150)
         self.tree.column("hostname", width=200)
-        self.tree.column("last_seen", width=160)
-        self.tree.pack(fill="both", expand=True, padx=8, pady=8)
+        self.tree.column("mac", width=180)
+        self.tree.column("last_seen", width=200)
+
+        self.tree.pack(fill="both", expand=True)
+
 
         # status bar
         self.status_var = tk.StringVar(value="Listo")
