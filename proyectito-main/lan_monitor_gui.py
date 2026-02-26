@@ -26,7 +26,7 @@ from config_loader import *
 # cinfig loaderrrrrr .py
 
 DB_FILE = "devices.db"
-SCAN_INTERVAL = 60  # segundos predeterminado para scan automático
+SCAN_INTERVAL = config.get('APP','scan_interval')  # segundos predeterminado para scan automático
 
 # ----------------- Utilidades de red -----------------
 def get_local_ip():
